@@ -1,0 +1,6 @@
+python-frontmatter
+PyYAML
+langchain
+langchain-community
+faiss-cpu
+sentence-transformers
