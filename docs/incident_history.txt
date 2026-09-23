@@ -1,0 +1,54 @@
+Incident Log - Historical Records
+==================================
+
+[2024-01-08 03:12 UTC] INC-1042 - Severity P2
+Database connection pool exhausted on the primary read replica after a
+sudden spike in traffic from the nightly batch export job. On-call engineer
+Priya Raman restarted the connection pooler (pgbouncer) and increased the
+max pool size from 200 to 400. Root cause was traced to the export job not
+releasing connections after completion. A follow-up ticket was filed to add
+connection timeout handling to the export job.
+
+[2024-02-14 11:45 UTC] INC-1078 - Severity P1
+Customer-facing API returned 500 errors for approximately 12 minutes after
+a bad configuration was deployed to the payments service. The deployment
+was rolled back automatically by the canary analysis system. Post-incident
+review found that the canary threshold for error rate was too permissive;
+it was tightened from 5% to 1% to catch similar regressions faster.
+
+[2024-03-02 09:20 UTC] INC-1103 - Severity P3
+Slow query performance reported by three enterprise customers on the
+reporting dashboard. Investigation revealed a missing index on the
+"created_at" column of the events table. Index was added during a
+maintenance window and query latency dropped from 4.2s to 180ms on average.
+
+[2024-04-19 22:05 UTC] INC-1156 - Severity P2
+Elevated error rates on the authentication service coincided with an
+expired TLS certificate on an internal service mesh sidecar. Certificate
+was renewed manually and automated renewal alerts were added to fire 14
+days before expiry instead of 3 days.
+
+[2024-05-30 16:40 UTC] INC-1201 - Severity P1
+A misconfigured autoscaling policy caused the checkout service to scale
+down to a single instance during a regional traffic surge tied to a
+marketing promotion. This resulted in a full outage of checkout for 8
+minutes. The autoscaling minimum instance count was raised from 1 to 4 and
+a load test was scheduled ahead of future promotions.
+
+[2024-07-11 05:55 UTC] INC-1247 - Severity P4
+Minor UI rendering glitch reported on the customer settings page in Safari
+browsers. Root cause was a CSS flexbox fallback issue. Fixed in the next
+scheduled release; no customer impact beyond cosmetic.
+
+[2024-08-23 14:10 UTC] INC-1288 - Severity P2
+Search indexing pipeline fell behind by approximately 6 hours due to a
+worker deadlock in the message queue consumer. Restarting the consumer
+cluster cleared the backlog within 40 minutes. Added a deadlock detection
+alert to the monitoring stack.
+
+[2024-10-05 01:30 UTC] INC-1330 - Severity P1
+Primary database failover triggered unexpectedly during routine patching
+due to a misclassified health check. Failover completed successfully with
+90 seconds of write unavailability. Health check thresholds were revised
+and patching runbooks were updated to require a manual failover instead of
+relying on automatic detection during maintenance windows.
