@@ -35,7 +35,9 @@ def build_router() -> Router:
 def run_query(router: Router, query_text: str) -> None:
     result = router.route(query_text)
     print(f"\nQuery: {result['query']}")
-    print(f"Routed to: {result['route'].upper()} engine")
+    print(f"Routed to: {result['route'].upper()}")
+    for step in result["trace"]:
+        print(f"  [{step['stage']}] {step['detail']} ({step['ms']} ms)")
     print("-" * 60)
     print(result["context"])
     print("-" * 60)
